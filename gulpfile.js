@@ -16,6 +16,7 @@ var paths = {
   ],
   srcDir: 'src/',
   distDir: 'dist/',
+  tests: 'tests/**/*.coffee'
 }
 
 coffeescriptFiles = function() {
@@ -48,10 +49,22 @@ gulp.task('concatenateSrc', function() {
     .pipe(gulp.dest('./dist/'))
 });
 
+gulp.task('compileTests', function () {
+  gulp.src(paths.tests)
+    .pipe(coffee({bare: true}).on('error', gutil.log))
+    .pipe(concat('tests.js'))
+    .pipe(gulp.dest('./dist/'))
+});
+
 // Rerun the task when a file changes
 gulp.task('watch', function() {
   gulp.watch(coffeescriptFiles(), ['compileSrc', 'concatenateSrc']);
+  gulp.watch(paths.tests, ['compileTests']);
 });
 
 // The default task (called when you run `gulp` from cli)
-gulp.task('default', ['compileSrc', 'concatenateSrc', 'watch']); 
+gulp.task('default', [
+  'compileSrc',
+  'concatenateSrc',
+  'compileTests',
+  'watch']); 
