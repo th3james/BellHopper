@@ -5,26 +5,28 @@ var order = require('gulp-order');
 var concat = require('gulp-concat');
 var _ = require('lodash');
 
-var fileNames = {
-  src: [
+var paths = {
+  srcFiles: [
     'remote-helpers',
     'remote-response-validator',
     'updateable-views',
     'remote-action',
     'remote-confirm',
     'remote-modal-view'
-  ]
+  ],
+  srcDir: 'src/',
+  distDir: 'dist/',
 }
 
 coffeescriptFiles = function() {
-  return _.map(fileNames.src, function(fileName) {
-    return "src/" + fileName + ".coffee";
+  return _.map(paths.srcFiles, function(fileName) {
+    return paths.srcDir + fileName + ".coffee";
   })
 }
 
 javascriptFiles = function() {
-  return _.map(fileNames.src, function(fileName) {
-    return "dist/" + fileName + ".js";
+  return _.map(paths.srcFiles, function(fileName) {
+    return paths.distDir + fileName + ".js";
   })
 }
 
