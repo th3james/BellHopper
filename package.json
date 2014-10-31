@@ -19,6 +19,9 @@
   "dependencies": {
     "gulp": "^3.8.9",
     "gulp-coffee": "^2.2.0",
-    "gulp-util": "^3.0.1"
+    "gulp-concat": "^2.4.1",
+    "gulp-order": "^1.1.1",
+    "gulp-util": "^3.0.1",
+    "lodash": "^2.4.1"
   }
 }
