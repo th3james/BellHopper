@@ -35,7 +35,7 @@ console.log(coffeescriptFiles());
 
 compileCoffee = function() {
   return gulp.src(coffeescriptFiles())
-    .pipe(coffee({bare: true}).on('error', gutil.log))
+    .pipe(coffee().on('error', gutil.log))
 }
 
 gulp.task('compileSrc', function () {
@@ -43,8 +43,7 @@ gulp.task('compileSrc', function () {
 });
 
 gulp.task('concatenateSrc', function() {
-  compileCoffee()
-    .pipe(order(javascriptFiles()))
+  gulp.src(javascriptFiles())
     .pipe(concat('bellhopper.js'))
     .pipe(gulp.dest('./dist/'))
 });
