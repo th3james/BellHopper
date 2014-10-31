@@ -1,0 +1,24 @@
+{
+  "name": "BellHopper",
+  "version": "0.0.0",
+  "description": "Use HTML attributes defer to server-side rendering for browser interactions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/th3james/BellHopper.git"
+  },
+  "author": "th3james",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/th3james/BellHopper/issues"
+  },
+  "homepage": "https://github.com/th3james/BellHopper",
+  "dependencies": {
+    "gulp": "^3.8.9",
+    "gulp-coffee": "^2.2.0",
+    "gulp-util": "^3.0.1"
+  }
+}
