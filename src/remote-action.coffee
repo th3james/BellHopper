@@ -2,15 +2,19 @@ window.RemoteAction = (srcEl) ->
   config = RemoteHelpers.extractAttributes(srcEl)
   RemoteHelpers.requireAttributes(config, ['remote-url'])
 
+  remoteAction = config['remote-url']
   $.ajax(
-    url: config['remote-url']
+    url: remoteAction
     method: config['remote-method']
-  ).done((response)->
+  ).then((responseBody, status, response) ->
+    RemoteResponseValidator.validateSuccessfulResponse(responseBody, remoteAction)
     
-    RemoteHelpers.triggerChange(response['mutated_models'])
-  ).fail((xhr, status, err, response)->
-    console.error err
-    throw new Error("Error making request #{config['remote-method']} #{config['remote-url']}")
+    RemoteHelpers.triggerChange(responseBody['mutated_models'])
+  ).fail((response, status, errorMsg)->
+    RemoteResponseValidator.validateErrorResponse(response, status, errorMsg, remoteAction)
+
+    RemoteHelpers.notifyUserOfError()
+    throw new Error("Expected status: 'Success', but #{config['remote-method']} #{remoteAction} responded with #{errorMsg}: #{JSON.stringify(response.responseJSON)}")
   )
 
 RemoteHelpers.onDataAction('remote_action', 'click', (event) ->

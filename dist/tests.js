@@ -183,28 +183,53 @@ describe('Remote Action', function() {
       }).toThrow(new Error('data-action="remote-action" elements must specify a data-remote-url attribute'));
     });
   });
-  return describe('when the request responds with mutated models', function() {
-    var element, mutatedModels, remoteUrl, responseJson;
+  return describe('on an element with with a remote url', function() {
+    var element, remoteUrl;
     remoteUrl = "/favourite";
     element = $("<div data-remote-url=\"" + remoteUrl + "\" data-remote-method=\"PATCH\">")[0];
-    mutatedModels = "favorited";
-    responseJson = {
-      "mutated_models": mutatedModels
-    };
-    return it('triggers an update for the mutated models', function() {
-      var server, triggerChangeStub;
-      server = sinon.fakeServer.create();
-      server.respondWith("PATCH", remoteUrl, [
-        201, {
-          "Content-Type": "text/json"
-        }, JSON.stringify(responseJson)
-      ]);
-      triggerChangeStub = sinon.stub(RemoteHelpers, 'triggerChange', function() {});
-      RemoteAction(element);
-      server.respond();
-      expect(triggerChangeStub.calledWith(mutatedModels)).toBeTruthy();
-      server.restore();
-      return triggerChangeStub.restore();
+    describe('when the request responds with mutated models', function() {
+      var mutatedModels, responseJson;
+      mutatedModels = "favorited";
+      responseJson = {
+        status: 'Sucess',
+        mutated_models: mutatedModels
+      };
+      return it('triggers an update for the mutated models', function() {
+        var server, triggerChangeStub;
+        server = sinon.fakeServer.create();
+        server.respondWith("PATCH", remoteUrl, [
+          201, {
+            "Content-Type": "text/json"
+          }, JSON.stringify(responseJson)
+        ]);
+        triggerChangeStub = sinon.stub(RemoteHelpers, 'triggerChange', function() {});
+        RemoteAction(element);
+        server.respond();
+        expect(triggerChangeStub.calledWith(mutatedModels)).toBeTruthy();
+        server.restore();
+        return triggerChangeStub.restore();
+      });
+    });
+    return describe('when the request with a json error state', function() {
+      var responseJson;
+      responseJson = {
+        status: 'UnprocessibleEntity'
+      };
+      return it('throws an error and alerts the user to reload the page', function() {
+        var alertStub, server;
+        alertStub = sinon.stub(window, 'alert', function() {});
+        server = sinon.fakeServer.create();
+        server.respondWith("PATCH", remoteUrl, [
+          422, {
+            "Content-Type": "text/json"
+          }, JSON.stringify(responseJson)
+        ]);
+        RemoteAction(element);
+        server.respond();
+        expect(alertStub.calledWith("Sorry, something when wrong. Please try again, or reload the page")).toBeTruthy();
+        server.restore();
+        return alertStub.restore();
+      });
     });
   });
 });
@@ -286,6 +311,32 @@ describe('Remote Helpers', function() {
       $(document).on('change:study_designs', eventSpy);
       RemoteHelpers.triggerChange('study_designs');
       return expect(eventSpy.callCount).toEqual(1);
+    });
+  });
+});
+
+describe('RemoteResponseValidator', function() {
+  return describe('.validateErrorResponse', function() {
+    return describe('given an empty error response', function() {
+      var errorMsg, remoteAction, response, status;
+      response = {
+        "readyState": 0,
+        "responseText": "",
+        "status": 0,
+        "statusText": "error"
+      };
+      status = 'error';
+      errorMsg = void 0;
+      remoteAction = "/pigs/oink";
+      return it("throws an appropriate error", function() {
+        var alertStub;
+        alertStub = sinon.stub(window, 'alert', function() {});
+        expect(function() {
+          return RemoteResponseValidator.validateErrorResponse(response, status, errorMsg, remoteAction);
+        }).toThrow(new RemoteResponseError("Request to " + remoteAction + " expected to respond with JSON, but got ''"));
+        expect(alertStub.calledWith("Sorry, something when wrong. Please try again, or reload the page")).toBeTruthy();
+        return alertStub.restore();
+      });
     });
   });
 });

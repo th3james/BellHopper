@@ -9,6 +9,7 @@ class window.RemoteResponseValidator
   @validateErrorResponse: (response, status, message, remoteUrl) ->
     validator = new RemoteResponseValidator(remoteUrl)
     validator.validateNotServerError(response, status, message)
+    validator.validateErrorResponseIsJSON(response)
     validator.validateStatusPresent(response.responseJSON)
 
   validateResponseType: (responseBody) ->
@@ -25,6 +26,15 @@ class window.RemoteResponseValidator
       errorMessage = "Error '#{status} - #{message}' submitting remote form to #{@remoteUrl}"
       console.log "#{errorMessage}:"
       console.log response
+
+      RemoteHelpers.notifyUserOfError()
+      throw new RemoteResponseError(errorMessage)
+
+  validateErrorResponseIsJSON: (response) ->
+    unless response.responseJSON?
+      errorMessage = "Request to #{@remoteUrl} expected to respond with JSON, but got '#{
+        response.responseText}'"
+      console.log errorMessage
 
       RemoteHelpers.notifyUserOfError()
       throw new RemoteResponseError(errorMessage)

@@ -18,6 +18,7 @@
       var validator;
       validator = new RemoteResponseValidator(remoteUrl);
       validator.validateNotServerError(response, status, message);
+      validator.validateErrorResponseIsJSON(response);
       return validator.validateStatusPresent(response.responseJSON);
     };
 
@@ -38,6 +39,16 @@
         errorMessage = "Error '" + status + " - " + message + "' submitting remote form to " + this.remoteUrl;
         console.log("" + errorMessage + ":");
         console.log(response);
+        RemoteHelpers.notifyUserOfError();
+        throw new RemoteResponseError(errorMessage);
+      }
+    };
+
+    RemoteResponseValidator.prototype.validateErrorResponseIsJSON = function(response) {
+      var errorMessage;
+      if (response.responseJSON == null) {
+        errorMessage = "Request to " + this.remoteUrl + " expected to respond with JSON, but got '" + response.responseText + "'";
+        console.log(errorMessage);
         RemoteHelpers.notifyUserOfError();
         throw new RemoteResponseError(errorMessage);
       }
