@@ -1,19 +1,19 @@
-describe 'Remote Modal View', ->
+describe 'BellHopper Modal View', ->
   describe '.constructor', ->
     it "creates a DOM element with the .modal class", ->
       expect($('.modal').length).toBe(0)
-      view = new RemoteModalView($('<div data-modal-url="/">')[0])
+      view = new BellHopper.ModalView($('<div data-modal-url="/">')[0])
       expect($('.modal').length).toBe(1)
       view.close()
 
     it "throws an error if the source object lacks a data-modal-url", ->
       expect(->
-        new RemoteModalView($('<div data-action="remote_modal">')[0])
+        new BellHopper.ModalView($('<div data-action="remote_modal">')[0])
       ).toThrow(new Error('data-action="remote_modal" elements must specify a data-modal-url attribute'))
 
   describe "#replaceModalContent", ->
     it "triggers partial:load on the document with the new HTML", ->
-      view = new RemoteModalView($('<div data-modal-url="/">')[0])
+      view = new BellHopper.ModalView($('<div data-modal-url="/">')[0])
       newPartial = '<span class="tastic">Hello World</span>'
 
       triggerCount = 0
@@ -32,7 +32,7 @@ describe 'Remote Modal View', ->
 
   describe "#close", ->
     it "removes the modal HTML from the page", ->
-      view = new RemoteModalView($('<div data-modal-url="/">')[0])
+      view = new BellHopper.ModalView($('<div data-modal-url="/">')[0])
       modalCount = $('.modal').length
 
       view.close()
@@ -61,7 +61,7 @@ describe 'Remote Modal View', ->
         alertStub = sinon.stub(window, 'alert', ->)
         postStub = stubPostResponse('fail', [response, status, message])
 
-        view = new RemoteModalView($('<div data-modal-url="/">')[0])
+        view = new BellHopper.ModalView($('<div data-modal-url="/">')[0])
 
         expect(->
           view.submitForm(fakeForm)
@@ -81,7 +81,7 @@ describe 'Remote Modal View', ->
       it "alerts the user to reload and throws an appropriate error", ->
         alertStub = sinon.stub(window, 'alert', ->)
         postStub = stubPostResponse('success', [response, status, message])
-        view = new RemoteModalView($('<div data-modal-url="/">')[0])
+        view = new BellHopper.ModalView($('<div data-modal-url="/">')[0])
 
         expect(->
           view.submitForm(fakeForm)
@@ -104,7 +104,7 @@ describe 'Remote Modal View', ->
       it "alerts the user to reload and throws an appropriate error", ->
         alertStub = sinon.stub(window, 'alert', ->)
         postStub = stubPostResponse('success', [response, status, message])
-        view = new RemoteModalView($('<div data-modal-url="/">')[0])
+        view = new BellHopper.ModalView($('<div data-modal-url="/">')[0])
 
         expect(->
           view.submitForm(fakeForm)

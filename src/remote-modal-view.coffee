@@ -7,7 +7,9 @@ modalTemplate = """
   </div>
 """
 
-class window.RemoteModalView
+window.BellHopper = {}
+
+class BellHopper.ModalView
   constructor: (srcEl)->
     @config = RemoteHelpers.extractAttributes(srcEl)
     RemoteHelpers.requireAttributes(@config, ['modal-url'])

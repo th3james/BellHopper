@@ -1,4 +1,4 @@
-describe 'Remote Modal View - Feature', ->
+describe 'BellHopper Modal View - Feature', ->
   describe "#render", ->
     it "requests the HTML for the modal from 'data-modal-url' and renders it
     to the modal body", (done) ->
@@ -11,7 +11,7 @@ describe 'Remote Modal View - Feature', ->
         [200, { "Content-Type": "text/html" }, "<div>#{formText}</div>"]
       )
 
-      view = new RemoteModalView(srcEl)
+      view = new BellHopper.ModalView(srcEl)
       view.render().done(->
         modalText = $.trim(view.$el.text())
         expect(modalText).toEqual(formText)
@@ -37,7 +37,7 @@ describe 'Remote Modal View - Feature', ->
         [500, { "Content-Type": "text/html" }, "ERROROROR"]
       )
 
-      view = new RemoteModalView(srcEl)
+      view = new BellHopper.ModalView(srcEl)
       view.render().done(->
         expect(false).toBeTruthy()
 
@@ -85,7 +85,7 @@ describe 'Remote Modal View - Feature', ->
           server.respondWith(modalUrl, formResponse)
           server.respondWith(formPostUrl, successResponse)
 
-          view = new RemoteModalView(srcEl)
+          view = new BellHopper.ModalView(srcEl)
           closeSpy = sinon.spy(view, 'close')
 
           view.render().done(->
@@ -122,7 +122,7 @@ describe 'Remote Modal View - Feature', ->
           server.respondWith(modalUrl, formResponse)
           server.respondWith(formPostUrl, errorResponse)
 
-          view = new RemoteModalView(srcEl)
+          view = new BellHopper.ModalView(srcEl)
           view.render().done(->
             view.$el.find('input[type="submit"]').click()
 
@@ -143,7 +143,7 @@ describe 'Remote Modal View - Feature', ->
           server.respond()
 
     it "closes the modal when cancel is clicked", ->
-      view = new RemoteModalView(srcEl)
+      view = new BellHopper.ModalView(srcEl)
       view.replaceModalContent(form)
 
       modalCount = $('.modal').length
@@ -164,7 +164,7 @@ describe 'Remote Modal View - Feature', ->
     """
 
     it "calls RemoteHelper.triggerChange() with the mutated model", ->
-      view = new RemoteModalView(srcEl)
+      view = new BellHopper.ModalView(srcEl)
       view.replaceModalContent(form)
       viewCloseSpy = sinon.spy(view, 'close')
 

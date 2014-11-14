@@ -1,4 +1,4 @@
-describe('Remote Modal View - Feature', function() {
+describe('BellHopper Modal View - Feature', function() {
   describe("#render", function() {
     it("requests the HTML for the modal from 'data-modal-url' and renders it to the modal body", function(done) {
       var formText, modalUrl, server, srcEl, view;
@@ -11,7 +11,7 @@ describe('Remote Modal View - Feature', function() {
           "Content-Type": "text/html"
         }, "<div>" + formText + "</div>"
       ]);
-      view = new RemoteModalView(srcEl);
+      view = new BellHopper.ModalView(srcEl);
       view.render().done(function() {
         var modalText;
         modalText = $.trim(view.$el.text());
@@ -35,7 +35,7 @@ describe('Remote Modal View - Feature', function() {
           "Content-Type": "text/html"
         }, "ERROROROR"
       ]);
-      view = new RemoteModalView(srcEl);
+      view = new BellHopper.ModalView(srcEl);
       view.render().done(function() {
         return expect(false).toBeTruthy();
       }).fail(function(err) {
@@ -78,7 +78,7 @@ describe('Remote Modal View - Feature', function() {
           server = sinon.fakeServer.create();
           server.respondWith(modalUrl, formResponse);
           server.respondWith(formPostUrl, successResponse);
-          view = new RemoteModalView(srcEl);
+          view = new BellHopper.ModalView(srcEl);
           closeSpy = sinon.spy(view, 'close');
           view.render().done(function() {
             view.$el.find('input[type="submit"]').click();
@@ -112,7 +112,7 @@ describe('Remote Modal View - Feature', function() {
           server = sinon.fakeServer.create();
           server.respondWith(modalUrl, formResponse);
           server.respondWith(formPostUrl, errorResponse);
-          view = new RemoteModalView(srcEl);
+          view = new BellHopper.ModalView(srcEl);
           view.render().done(function() {
             view.$el.find('input[type="submit"]').click();
             expect(server.requests.length).toEqual(2);
@@ -132,7 +132,7 @@ describe('Remote Modal View - Feature', function() {
     });
     return it("closes the modal when cancel is clicked", function() {
       var modalCount, view;
-      view = new RemoteModalView(srcEl);
+      view = new BellHopper.ModalView(srcEl);
       view.replaceModalContent(form);
       modalCount = $('.modal').length;
       view.$el.find('[data-action="cancel"]').click();
@@ -148,7 +148,7 @@ describe('Remote Modal View - Feature', function() {
     form = "<form action=\"" + formPostUrl + "\"><input type=\"submit\"/></form>";
     return it("calls RemoteHelper.triggerChange() with the mutated model", function() {
       var server, triggerChangeStub, view, viewCloseSpy;
-      view = new RemoteModalView(srcEl);
+      view = new BellHopper.ModalView(srcEl);
       view.replaceModalContent(form);
       viewCloseSpy = sinon.spy(view, 'close');
       server = sinon.fakeServer.create();
@@ -341,25 +341,25 @@ describe('RemoteResponseValidator', function() {
   });
 });
 
-describe('Remote Modal View', function() {
+describe('BellHopper Modal View', function() {
   describe('.constructor', function() {
     it("creates a DOM element with the .modal class", function() {
       var view;
       expect($('.modal').length).toBe(0);
-      view = new RemoteModalView($('<div data-modal-url="/">')[0]);
+      view = new BellHopper.ModalView($('<div data-modal-url="/">')[0]);
       expect($('.modal').length).toBe(1);
       return view.close();
     });
     return it("throws an error if the source object lacks a data-modal-url", function() {
       return expect(function() {
-        return new RemoteModalView($('<div data-action="remote_modal">')[0]);
+        return new BellHopper.ModalView($('<div data-action="remote_modal">')[0]);
       }).toThrow(new Error('data-action="remote_modal" elements must specify a data-modal-url attribute'));
     });
   });
   describe("#replaceModalContent", function() {
     return it("triggers partial:load on the document with the new HTML", function() {
       var assertCallback, newPartial, triggerCount, view;
-      view = new RemoteModalView($('<div data-modal-url="/">')[0]);
+      view = new BellHopper.ModalView($('<div data-modal-url="/">')[0]);
       newPartial = '<span class="tastic">Hello World</span>';
       triggerCount = 0;
       assertCallback = function(event, partial) {
@@ -377,7 +377,7 @@ describe('Remote Modal View', function() {
   describe("#close", function() {
     return it("removes the modal HTML from the page", function() {
       var modalCount, view;
-      view = new RemoteModalView($('<div data-modal-url="/">')[0]);
+      view = new BellHopper.ModalView($('<div data-modal-url="/">')[0]);
       modalCount = $('.modal').length;
       view.close();
       return expect($('.modal').length).toBe(modalCount - 1);
@@ -410,7 +410,7 @@ describe('Remote Modal View', function() {
         var alertStub, postStub, view;
         alertStub = sinon.stub(window, 'alert', function() {});
         postStub = stubPostResponse('fail', [response, status, message]);
-        view = new RemoteModalView($('<div data-modal-url="/">')[0]);
+        view = new BellHopper.ModalView($('<div data-modal-url="/">')[0]);
         expect(function() {
           return view.submitForm(fakeForm);
         }).toThrow(new RemoteResponseError("Error 'error - Internal Server Error ' submitting remote form to " + remoteAction));
@@ -430,7 +430,7 @@ describe('Remote Modal View', function() {
         var alertStub, postStub, view;
         alertStub = sinon.stub(window, 'alert', function() {});
         postStub = stubPostResponse('success', [response, status, message]);
-        view = new RemoteModalView($('<div data-modal-url="/">')[0]);
+        view = new BellHopper.ModalView($('<div data-modal-url="/">')[0]);
         expect(function() {
           return view.submitForm(fakeForm);
         }).toThrow(new RemoteResponseError("Post to " + remoteAction + " didn't respond with a status attribute (" + (JSON.stringify(response)) + ")"));
@@ -450,7 +450,7 @@ describe('Remote Modal View', function() {
         var alertStub, postStub, view;
         alertStub = sinon.stub(window, 'alert', function() {});
         postStub = stubPostResponse('success', [response, status, message]);
-        view = new RemoteModalView($('<div data-modal-url="/">')[0]);
+        view = new BellHopper.ModalView($('<div data-modal-url="/">')[0]);
         expect(function() {
           return view.submitForm(fakeForm);
         }).toThrow(new RemoteResponseError("Post to " + remoteAction + " expected to respond with JSON, but got '" + response + "'"));

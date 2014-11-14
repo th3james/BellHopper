@@ -198,8 +198,10 @@
 
   modalTemplate = "<div class=\"modal\">\n  <div class=\"modal-dialog\">\n    <div class=\"modal-content\">\n    </div>\n  </div>\n</div>";
 
-  window.RemoteModalView = (function() {
-    function RemoteModalView(srcEl) {
+  window.BellHopper = {};
+
+  BellHopper.ModalView = (function() {
+    function ModalView(srcEl) {
       this.close = __bind(this.close, this);
       this.routeResponse = __bind(this.routeResponse, this);
       this.config = RemoteHelpers.extractAttributes(srcEl);
@@ -209,7 +211,7 @@
       this.$el.modal('show');
     }
 
-    RemoteModalView.prototype.submitForm = function(form) {
+    ModalView.prototype.submitForm = function(form) {
       var remoteAction;
       remoteAction = form.attr('action');
       return $.post(remoteAction, form.serialize()).then((function(_this) {
@@ -225,7 +227,7 @@
       })(this));
     };
 
-    RemoteModalView.prototype.routeResponse = function(response) {
+    ModalView.prototype.routeResponse = function(response) {
       switch (response.status) {
         case 'Success':
           this.close();
@@ -237,17 +239,17 @@
       }
     };
 
-    RemoteModalView.prototype.replaceModalContent = function(html) {
+    ModalView.prototype.replaceModalContent = function(html) {
       this.setHtml(html);
       this.bindToForm();
       return $(document).trigger('partial:load', [this.$el.find('.modal-content').children()]);
     };
 
-    RemoteModalView.prototype.setHtml = function(html) {
+    ModalView.prototype.setHtml = function(html) {
       return this.$el.find('.modal-content').html(html);
     };
 
-    RemoteModalView.prototype.bindToForm = function() {
+    ModalView.prototype.bindToForm = function() {
       var cancelButton, form;
       form = this.$el.find('form');
       form.on('submit', (function(_this) {
@@ -265,7 +267,7 @@
       })(this));
     };
 
-    RemoteModalView.prototype.render = function() {
+    ModalView.prototype.render = function() {
       var deferred;
       deferred = $.Deferred();
       $.get(this.config['modal-url']).done((function(_this) {
@@ -284,12 +286,12 @@
       return deferred.promise();
     };
 
-    RemoteModalView.prototype.close = function() {
+    ModalView.prototype.close = function() {
       this.$el.modal('hide');
       return this.$el.remove();
     };
 
-    return RemoteModalView;
+    return ModalView;
 
   })();
 
