@@ -173,6 +173,128 @@ describe('BellHopper Modal View - Feature', function() {
   });
 });
 
+describe('BellHopper Modal View', function() {
+  describe('.constructor', function() {
+    it("creates a DOM element with the .modal class", function() {
+      var view;
+      $('.modal').remove();
+      expect($('.modal').length).toBe(0);
+      view = new BellHopper.ModalView($('<div data-modal-url="/">')[0]);
+      expect($('.modal').length).toBe(1);
+      return view.close();
+    });
+    return it("throws an error if the source object lacks a data-modal-url", function() {
+      return expect(function() {
+        return new BellHopper.ModalView($('<div data-action="remote_modal">')[0]);
+      }).toThrow(new Error('data-action="remote_modal" elements must specify a data-modal-url attribute'));
+    });
+  });
+  describe("#replaceModalContent", function() {
+    return it("triggers partial:load on the document with the new HTML", function() {
+      var assertCallback, newPartial, triggerCount, view;
+      view = new BellHopper.ModalView($('<div data-modal-url="/">')[0]);
+      newPartial = '<span class="tastic">Hello World</span>';
+      triggerCount = 0;
+      assertCallback = function(event, partial) {
+        var renderedPartial;
+        triggerCount += 1;
+        renderedPartial = view.$el.find('span.tastic')[0];
+        return expect($(renderedPartial).text()).toEqual('Hello World');
+      };
+      $(document).on('partial:load', assertCallback);
+      view.replaceModalContent(newPartial);
+      $(document).off('partial:load', assertCallback);
+      return expect(triggerCount).toEqual(1);
+    });
+  });
+  describe("#close", function() {
+    return it("removes the modal HTML from the page", function() {
+      var modalCount, view;
+      view = new BellHopper.ModalView($('<div data-modal-url="/">')[0]);
+      modalCount = $('.modal').length;
+      view.close();
+      return expect($('.modal').length).toBe(modalCount - 1);
+    });
+  });
+  return describe("#submitForm", function() {
+    var fakeForm, remoteAction, stubPostResponse;
+    stubPostResponse = function(status, responseArgs) {
+      return sinon.stub($, 'post', function() {
+        var deferred;
+        deferred = $.Deferred();
+        if (status === 'success') {
+          deferred.resolve(responseArgs[0], responseArgs[1], responseArgs[2]);
+        } else {
+          deferred.reject(responseArgs[0], responseArgs[1], responseArgs[2]);
+        }
+        return deferred;
+      });
+    };
+    remoteAction = "/study";
+    fakeForm = $("<form action=" + remoteAction + ">");
+    describe("when given 500 server error", function() {
+      var message, response, status;
+      response = {
+        responseText: "<html></html>"
+      };
+      status = "error";
+      message = "Internal Server Error ";
+      return it("alerts the user to reload and throws an appropriate error", function() {
+        var alertStub, postStub, view;
+        alertStub = sinon.stub(window, 'alert', function() {});
+        postStub = stubPostResponse('fail', [response, status, message]);
+        view = new BellHopper.ModalView($('<div data-modal-url="/">')[0]);
+        expect(function() {
+          return view.submitForm(fakeForm);
+        }).toThrow(new RemoteResponseError("Error 'error - Internal Server Error ' submitting remote form to " + remoteAction));
+        expect(alertStub.calledWith("Sorry, something when wrong. Please try again, or reload the page")).toBeTruthy();
+        alertStub.restore();
+        return postStub.restore();
+      });
+    });
+    describe("when given a JSON response with no status", function() {
+      var message, response, status;
+      response = {};
+      status = "success";
+      message = {
+        responseJSON: {}
+      };
+      return it("alerts the user to reload and throws an appropriate error", function() {
+        var alertStub, postStub, view;
+        alertStub = sinon.stub(window, 'alert', function() {});
+        postStub = stubPostResponse('success', [response, status, message]);
+        view = new BellHopper.ModalView($('<div data-modal-url="/">')[0]);
+        expect(function() {
+          return view.submitForm(fakeForm);
+        }).toThrow(new RemoteResponseError("Post to " + remoteAction + " didn't respond with a status attribute (" + (JSON.stringify(response)) + ")"));
+        expect(alertStub.calledWith("Sorry, something when wrong. Please try again, or reload the page")).toBeTruthy();
+        alertStub.restore();
+        return postStub.restore();
+      });
+    });
+    return describe("when given a success response with HTML", function() {
+      var message, response, status;
+      response = "<span>wut?</span>";
+      status = "success";
+      message = {
+        responseText: "<span>wut?</span>"
+      };
+      return it("alerts the user to reload and throws an appropriate error", function() {
+        var alertStub, postStub, view;
+        alertStub = sinon.stub(window, 'alert', function() {});
+        postStub = stubPostResponse('success', [response, status, message]);
+        view = new BellHopper.ModalView($('<div data-modal-url="/">')[0]);
+        expect(function() {
+          return view.submitForm(fakeForm);
+        }).toThrow(new RemoteResponseError("Post to " + remoteAction + " expected to respond with JSON, but got '" + response + "'"));
+        expect(alertStub.calledWith("Sorry, something when wrong. Please try again, or reload the page")).toBeTruthy();
+        alertStub.restore();
+        return postStub.restore();
+      });
+    });
+  });
+});
+
 describe('Remote Action', function() {
   describe('when the given element has no remote-url specified', function() {
     return it('throws an error', function() {
@@ -336,127 +458,6 @@ describe('RemoteResponseValidator', function() {
         }).toThrow(new RemoteResponseError("Request to " + remoteAction + " expected to respond with JSON, but got ''"));
         expect(alertStub.calledWith("Sorry, something when wrong. Please try again, or reload the page")).toBeTruthy();
         return alertStub.restore();
-      });
-    });
-  });
-});
-
-describe('BellHopper Modal View', function() {
-  describe('.constructor', function() {
-    it("creates a DOM element with the .modal class", function() {
-      var view;
-      expect($('.modal').length).toBe(0);
-      view = new BellHopper.ModalView($('<div data-modal-url="/">')[0]);
-      expect($('.modal').length).toBe(1);
-      return view.close();
-    });
-    return it("throws an error if the source object lacks a data-modal-url", function() {
-      return expect(function() {
-        return new BellHopper.ModalView($('<div data-action="remote_modal">')[0]);
-      }).toThrow(new Error('data-action="remote_modal" elements must specify a data-modal-url attribute'));
-    });
-  });
-  describe("#replaceModalContent", function() {
-    return it("triggers partial:load on the document with the new HTML", function() {
-      var assertCallback, newPartial, triggerCount, view;
-      view = new BellHopper.ModalView($('<div data-modal-url="/">')[0]);
-      newPartial = '<span class="tastic">Hello World</span>';
-      triggerCount = 0;
-      assertCallback = function(event, partial) {
-        var renderedPartial;
-        triggerCount += 1;
-        renderedPartial = view.$el.find('span.tastic')[0];
-        return expect($(renderedPartial).text()).toEqual('Hello World');
-      };
-      $(document).on('partial:load', assertCallback);
-      view.replaceModalContent(newPartial);
-      $(document).off('partial:load', assertCallback);
-      return expect(triggerCount).toEqual(1);
-    });
-  });
-  describe("#close", function() {
-    return it("removes the modal HTML from the page", function() {
-      var modalCount, view;
-      view = new BellHopper.ModalView($('<div data-modal-url="/">')[0]);
-      modalCount = $('.modal').length;
-      view.close();
-      return expect($('.modal').length).toBe(modalCount - 1);
-    });
-  });
-  return describe("#submitForm", function() {
-    var fakeForm, remoteAction, stubPostResponse;
-    stubPostResponse = function(status, responseArgs) {
-      return sinon.stub($, 'post', function() {
-        var deferred;
-        deferred = $.Deferred();
-        if (status === 'success') {
-          deferred.resolve(responseArgs[0], responseArgs[1], responseArgs[2]);
-        } else {
-          deferred.reject(responseArgs[0], responseArgs[1], responseArgs[2]);
-        }
-        return deferred;
-      });
-    };
-    remoteAction = "/study";
-    fakeForm = $("<form action=" + remoteAction + ">");
-    describe("when given 500 server error", function() {
-      var message, response, status;
-      response = {
-        responseText: "<html></html>"
-      };
-      status = "error";
-      message = "Internal Server Error ";
-      return it("alerts the user to reload and throws an appropriate error", function() {
-        var alertStub, postStub, view;
-        alertStub = sinon.stub(window, 'alert', function() {});
-        postStub = stubPostResponse('fail', [response, status, message]);
-        view = new BellHopper.ModalView($('<div data-modal-url="/">')[0]);
-        expect(function() {
-          return view.submitForm(fakeForm);
-        }).toThrow(new RemoteResponseError("Error 'error - Internal Server Error ' submitting remote form to " + remoteAction));
-        expect(alertStub.calledWith("Sorry, something when wrong. Please try again, or reload the page")).toBeTruthy();
-        alertStub.restore();
-        return postStub.restore();
-      });
-    });
-    describe("when given a JSON response with no status", function() {
-      var message, response, status;
-      response = {};
-      status = "success";
-      message = {
-        responseJSON: {}
-      };
-      return it("alerts the user to reload and throws an appropriate error", function() {
-        var alertStub, postStub, view;
-        alertStub = sinon.stub(window, 'alert', function() {});
-        postStub = stubPostResponse('success', [response, status, message]);
-        view = new BellHopper.ModalView($('<div data-modal-url="/">')[0]);
-        expect(function() {
-          return view.submitForm(fakeForm);
-        }).toThrow(new RemoteResponseError("Post to " + remoteAction + " didn't respond with a status attribute (" + (JSON.stringify(response)) + ")"));
-        expect(alertStub.calledWith("Sorry, something when wrong. Please try again, or reload the page")).toBeTruthy();
-        alertStub.restore();
-        return postStub.restore();
-      });
-    });
-    return describe("when given a success response with HTML", function() {
-      var message, response, status;
-      response = "<span>wut?</span>";
-      status = "success";
-      message = {
-        responseText: "<span>wut?</span>"
-      };
-      return it("alerts the user to reload and throws an appropriate error", function() {
-        var alertStub, postStub, view;
-        alertStub = sinon.stub(window, 'alert', function() {});
-        postStub = stubPostResponse('success', [response, status, message]);
-        view = new BellHopper.ModalView($('<div data-modal-url="/">')[0]);
-        expect(function() {
-          return view.submitForm(fakeForm);
-        }).toThrow(new RemoteResponseError("Post to " + remoteAction + " expected to respond with JSON, but got '" + response + "'"));
-        expect(alertStub.calledWith("Sorry, something when wrong. Please try again, or reload the page")).toBeTruthy();
-        alertStub.restore();
-        return postStub.restore();
       });
     });
   });

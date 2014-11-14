@@ -12,7 +12,7 @@ var paths = {
     'updateable-views',
     'remote-action',
     'remote-confirm',
-    'remote-modal-view'
+    'modal-view'
   ],
   srcDir: 'src/',
   distDir: 'dist/',

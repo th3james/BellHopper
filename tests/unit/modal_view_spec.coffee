@@ -1,6 +1,7 @@
 describe 'BellHopper Modal View', ->
   describe '.constructor', ->
     it "creates a DOM element with the .modal class", ->
+      $('.modal').remove()
       expect($('.modal').length).toBe(0)
       view = new BellHopper.ModalView($('<div data-modal-url="/">')[0])
       expect($('.modal').length).toBe(1)
