@@ -7,7 +7,7 @@ modalTemplate = """
   </div>
 """
 
-window.BellHopper = {}
+window.BellHopper ||= {}
 
 class BellHopper.ModalView
   constructor: (srcEl)->

@@ -147,7 +147,9 @@
 }).call(this);
 
 (function() {
-  window.RemoteAction = function(srcEl) {
+  window.BellHopper || (window.BellHopper = {});
+
+  BellHopper.RemoteAction = function(srcEl) {
     var config, remoteAction;
     config = RemoteHelpers.extractAttributes(srcEl);
     RemoteHelpers.requireAttributes(config, ['remote-url']);
@@ -198,7 +200,7 @@
 
   modalTemplate = "<div class=\"modal\">\n  <div class=\"modal-dialog\">\n    <div class=\"modal-content\">\n    </div>\n  </div>\n</div>";
 
-  window.BellHopper = {};
+  window.BellHopper || (window.BellHopper = {});
 
   BellHopper.ModalView = (function() {
     function ModalView(srcEl) {

@@ -1,4 +1,6 @@
-window.RemoteAction = (srcEl) ->
+window.BellHopper ||= {}
+
+BellHopper.RemoteAction = (srcEl) ->
   config = RemoteHelpers.extractAttributes(srcEl)
   RemoteHelpers.requireAttributes(config, ['remote-url'])
 
@@ -18,5 +20,5 @@ window.RemoteAction = (srcEl) ->
   )
 
 RemoteHelpers.onDataAction('remote_action', 'click', (event) ->
-  RemoteAction(event.currentTarget)
+  BellHopper.RemoteAction(event.currentTarget)
 )

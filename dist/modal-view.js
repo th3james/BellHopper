@@ -4,7 +4,7 @@
 
   modalTemplate = "<div class=\"modal\">\n  <div class=\"modal-dialog\">\n    <div class=\"modal-content\">\n    </div>\n  </div>\n</div>";
 
-  window.BellHopper = {};
+  window.BellHopper || (window.BellHopper = {});
 
   BellHopper.ModalView = (function() {
     function ModalView(srcEl) {

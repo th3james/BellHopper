@@ -1,5 +1,7 @@
 (function() {
-  window.RemoteAction = function(srcEl) {
+  window.BellHopper || (window.BellHopper = {});
+
+  BellHopper.RemoteAction = function(srcEl) {
     var config, remoteAction;
     config = RemoteHelpers.extractAttributes(srcEl);
     RemoteHelpers.requireAttributes(config, ['remote-url']);
@@ -18,7 +20,7 @@
   };
 
   RemoteHelpers.onDataAction('remote_action', 'click', function(event) {
-    return RemoteAction(event.currentTarget);
+    return BellHopper.RemoteAction(event.currentTarget);
   });
 
 }).call(this);

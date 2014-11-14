@@ -301,7 +301,7 @@ describe('Remote Action', function() {
       var element;
       element = $('<div data-action="remote-action">');
       return expect(function() {
-        return RemoteAction(element);
+        return BellHopper.RemoteAction(element);
       }).toThrow(new Error('data-action="remote-action" elements must specify a data-remote-url attribute'));
     });
   });
@@ -325,7 +325,7 @@ describe('Remote Action', function() {
           }, JSON.stringify(responseJson)
         ]);
         triggerChangeStub = sinon.stub(RemoteHelpers, 'triggerChange', function() {});
-        RemoteAction(element);
+        BellHopper.RemoteAction(element);
         server.respond();
         expect(triggerChangeStub.calledWith(mutatedModels)).toBeTruthy();
         server.restore();
@@ -346,7 +346,7 @@ describe('Remote Action', function() {
             "Content-Type": "text/json"
           }, JSON.stringify(responseJson)
         ]);
-        RemoteAction(element);
+        BellHopper.RemoteAction(element);
         server.respond();
         expect(alertStub.calledWith("Sorry, something when wrong. Please try again, or reload the page")).toBeTruthy();
         server.restore();

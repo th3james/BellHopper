@@ -4,7 +4,7 @@ describe 'Remote Action', ->
     it 'throws an error', ->
       element = $('<div data-action="remote-action">')
       expect(->
-        RemoteAction(element)
+        BellHopper.RemoteAction(element)
       ).toThrow(new Error('data-action="remote-action" elements must specify a data-remote-url attribute'))
 
   describe 'on an element with with a remote url', ->
@@ -27,7 +27,7 @@ describe 'Remote Action', ->
         triggerChangeStub = sinon.stub(
           RemoteHelpers, 'triggerChange', ->)
 
-        RemoteAction(element)
+        BellHopper.RemoteAction(element)
         server.respond()
 
         expect(
@@ -49,7 +49,7 @@ describe 'Remote Action', ->
             JSON.stringify(responseJson)]
         )
 
-        RemoteAction(element)
+        BellHopper.RemoteAction(element)
         server.respond()
 
         expect(alertStub.calledWith(
