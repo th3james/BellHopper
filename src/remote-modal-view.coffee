@@ -1,5 +1,5 @@
 modalTemplate = """
-  <div class="modal">
+  <div class="modal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
       </div>
@@ -14,7 +14,10 @@ class window.RemoteModalView
 
     @$el = $(modalTemplate)
     $('body').append(@$el)
-    @$el.modal('show')
+    @$el.modal(
+      keyboard: true
+      show: true
+    )
 
   submitForm: (form) ->
     remoteAction = form.attr('action')

@@ -196,7 +196,7 @@
   var modalTemplate,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  modalTemplate = "<div class=\"modal\">\n  <div class=\"modal-dialog\">\n    <div class=\"modal-content\">\n    </div>\n  </div>\n</div>";
+  modalTemplate = "<div class=\"modal\" tabindex=\"-1\">\n  <div class=\"modal-dialog\">\n    <div class=\"modal-content\">\n    </div>\n  </div>\n</div>";
 
   window.RemoteModalView = (function() {
     function RemoteModalView(srcEl) {
@@ -206,7 +206,10 @@
       RemoteHelpers.requireAttributes(this.config, ['modal-url']);
       this.$el = $(modalTemplate);
       $('body').append(this.$el);
-      this.$el.modal('show');
+      this.$el.modal({
+        keyboard: true,
+        show: true
+      });
     }
 
     RemoteModalView.prototype.submitForm = function(form) {
