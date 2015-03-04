@@ -1,13 +1,13 @@
 (function() {
   var modalTemplate,
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+    bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   modalTemplate = "<div class=\"modal\" tabindex=\"-1\">\n  <div class=\"modal-dialog\">\n    <div class=\"modal-content\">\n    </div>\n  </div>\n</div>";
 
   window.RemoteModalView = (function() {
     function RemoteModalView(srcEl) {
-      this.close = __bind(this.close, this);
-      this.routeResponse = __bind(this.routeResponse, this);
+      this.close = bind(this.close, this);
+      this.routeResponse = bind(this.routeResponse, this);
       this.config = RemoteHelpers.extractAttributes(srcEl);
       RemoteHelpers.requireAttributes(this.config, ['modal-url']);
       this.$el = $(modalTemplate);

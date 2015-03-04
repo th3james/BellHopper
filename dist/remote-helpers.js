@@ -17,21 +17,21 @@
       return attributes;
     },
     requireAttributes: function(attributes, required) {
-      var requiredAttribute, _i, _len, _results;
-      _results = [];
-      for (_i = 0, _len = required.length; _i < _len; _i++) {
-        requiredAttribute = required[_i];
+      var i, len, requiredAttribute, results;
+      results = [];
+      for (i = 0, len = required.length; i < len; i++) {
+        requiredAttribute = required[i];
         if (!attributes[requiredAttribute]) {
           throw new Error("data-action=\"" + attributes['action'] + "\" elements must specify a data-" + requiredAttribute + " attribute");
         } else {
-          _results.push(void 0);
+          results.push(void 0);
         }
       }
-      return _results;
+      return results;
     },
     onDataAction: function(dataAction, eventName, handler) {
       return $(document).on("ready page:load", function() {
-        return $('#main').delegate("[data-action=\"" + dataAction + "\"]", eventName, handler);
+        return $('body').delegate("[data-action=\"" + dataAction + "\"]", eventName, handler);
       });
     },
     triggerChange: function(models) {
