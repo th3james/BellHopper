@@ -17,21 +17,21 @@
       return attributes;
     },
     requireAttributes: function(attributes, required) {
-      var requiredAttribute, _i, _len, _results;
-      _results = [];
-      for (_i = 0, _len = required.length; _i < _len; _i++) {
-        requiredAttribute = required[_i];
+      var i, len, requiredAttribute, results;
+      results = [];
+      for (i = 0, len = required.length; i < len; i++) {
+        requiredAttribute = required[i];
         if (!attributes[requiredAttribute]) {
           throw new Error("data-action=\"" + attributes['action'] + "\" elements must specify a data-" + requiredAttribute + " attribute");
         } else {
-          _results.push(void 0);
+          results.push(void 0);
         }
       }
-      return _results;
+      return results;
     },
     onDataAction: function(dataAction, eventName, handler) {
       return $(document).on("ready page:load", function() {
-        return $('#main').delegate("[data-action=\"" + dataAction + "\"]", eventName, handler);
+        return $('body').delegate("[data-action=\"" + dataAction + "\"]", eventName, handler);
       });
     },
     triggerChange: function(models) {
@@ -46,12 +46,12 @@
 }).call(this);
 
 (function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+  var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
 
   window.RemoteResponseValidator = (function() {
-    function RemoteResponseValidator(remoteUrl) {
-      this.remoteUrl = remoteUrl;
+    function RemoteResponseValidator(remoteUrl1) {
+      this.remoteUrl = remoteUrl1;
     }
 
     RemoteResponseValidator.validateSuccessfulResponse = function(responseBody, remoteUrl) {
@@ -73,10 +73,10 @@
       var errorMessage;
       if (typeof responseBody !== 'object') {
         errorMessage = "Post to " + this.remoteUrl + " expected to respond with JSON, but got";
-        console.log("" + errorMessage + ": ");
+        console.log(errorMessage + ": ");
         console.log(responseBody);
         RemoteHelpers.notifyUserOfError();
-        throw new RemoteResponseError("" + errorMessage + " '" + responseBody + "'");
+        throw new RemoteResponseError(errorMessage + " '" + responseBody + "'");
       }
     };
 
@@ -84,7 +84,7 @@
       var errorMessage;
       if ((typeof message === 'string') && (message.match(/^Internal Server Error.*/))) {
         errorMessage = "Error '" + status + " - " + message + "' submitting remote form to " + this.remoteUrl;
-        console.log("" + errorMessage + ":");
+        console.log(errorMessage + ":");
         console.log(response);
         RemoteHelpers.notifyUserOfError();
         throw new RemoteResponseError(errorMessage);
@@ -114,8 +114,8 @@
 
   })();
 
-  window.RemoteResponseError = (function(_super) {
-    __extends(RemoteResponseError, _super);
+  window.RemoteResponseError = (function(superClass) {
+    extend(RemoteResponseError, superClass);
 
     function RemoteResponseError() {
       return RemoteResponseError.__super__.constructor.apply(this, arguments);
@@ -194,14 +194,14 @@
 
 (function() {
   var modalTemplate,
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+    bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   modalTemplate = "<div class=\"modal\" tabindex=\"-1\">\n  <div class=\"modal-dialog\">\n    <div class=\"modal-content\">\n    </div>\n  </div>\n</div>";
 
   window.RemoteModalView = (function() {
     function RemoteModalView(srcEl) {
-      this.close = __bind(this.close, this);
-      this.routeResponse = __bind(this.routeResponse, this);
+      this.close = bind(this.close, this);
+      this.routeResponse = bind(this.routeResponse, this);
       this.config = RemoteHelpers.extractAttributes(srcEl);
       RemoteHelpers.requireAttributes(this.config, ['modal-url']);
       this.$el = $(modalTemplate);
