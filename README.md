@@ -84,3 +84,29 @@ BellHopper remote actions and modals expect the server to respond with JSON in c
   * **status** (required) - JSON responses should always include a 'status' attribute, which contains a string describing the status of the request. For a response that succeeds, this should be 'Success'. See the documentation for each action to see what other statuses are accepted.
   * **mutated_models** (optional) - string which specifies which (if any) models were modified (add, delete, update) by the request. This then triggers `RemoteHelpers.triggerChange(<modelNae>)`, which will fire a `'change:<modelName>'` event on document, and request that all UpdateableViews for that model are re-rendered from the server.
   * **template** (optional) - Some states will require a new HTML to be rendered to the DOM (for example, when a RemoteModalView needs to re-render a form with errors). `template` is where the new HTML to be rendered lives.
+
+
+### Contributing
+
+Fork the repository, then get the project set up with the following steps. 
+
+Install the projects dependencies with:
+
+```bash
+  npm install
+```
+
+Compile the distribution version and watch for changes with:
+
+```bash
+  gulp
+```
+
+To run the tests:
+
+```bash
+  open tests.html
+```
+
+Once that is all set up, then add your new feature with tests and submit a Pull Request for review.
+
