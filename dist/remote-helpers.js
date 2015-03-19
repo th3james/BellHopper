@@ -41,7 +41,8 @@
       for (i = 0, len = ref.length; i < len; i++) {
         model = ref[i];
         results.push((function(model) {
-          $(document).trigger("change:" + (model.trim()), [model]);
+          model = model.trim();
+          $(document).trigger("change:" + model, [model]);
           return UpdateableViews.updateViewsForModels(model);
         })(model));
       }

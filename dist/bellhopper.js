@@ -35,15 +35,16 @@
       });
     },
     triggerChange: function(models) {
-      var fn, i, len, model, ref, results;
+      var i, len, model, ref, results;
       ref = models.split(",");
-      fn = function(model) {};
       results = [];
       for (i = 0, len = ref.length; i < len; i++) {
         model = ref[i];
-        fn(model);
-        $(document).trigger("change:" + (model.trim()), [model]);
-        results.push(UpdateableViews.updateViewsForModels(model));
+        results.push((function(model) {
+          model = model.trim();
+          $(document).trigger("change:" + model, [model]);
+          return UpdateableViews.updateViewsForModels(model);
+        })(model));
       }
       return results;
     },
