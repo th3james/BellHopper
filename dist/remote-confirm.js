@@ -8,7 +8,7 @@
         url: config['remote-url'],
         method: config['remote-method']
       }).done(function() {
-        return UpdateableViews.updateViewsForModels(config['mutates-models']);
+        return UpdateableViews.updateViewsForModel(config['mutates-models']);
       });
     }
   };

@@ -71,7 +71,7 @@ Updateable views are DOM elements on a page whose content can be re-rendered by 
 You can update all partials which represents a model using this command:
 
 ```Javascript
-  UpdateableViews.updateViewsForModels('bags')
+  UpdateableViews.updateViewsForModel('bags')
 ```
 
 This will trigger a request to the `data-remote-partial-url` and replace the contents of the DOM element with the returned HTML.

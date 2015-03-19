@@ -43,7 +43,7 @@
         results.push((function(model) {
           model = model.trim();
           $(document).trigger("change:" + model, [model]);
-          return UpdateableViews.updateViewsForModels(model);
+          return UpdateableViews.updateViewsForModel(model);
         })(model));
       }
       return results;

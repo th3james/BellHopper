@@ -1,6 +1,6 @@
 window.UpdateableViews =
-  updateViewsForModels: (models) ->
-    $("[data-model=\"#{models}\"]").each((i, viewEl)->
+  updateViewsForModel: (model) ->
+    $("[data-model=\"#{model}\"]").each((i, viewEl)->
       UpdateableViews.updateView(viewEl)
     )
   

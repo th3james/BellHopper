@@ -29,7 +29,7 @@ window.RemoteHelpers =
       do (model) ->
         model = model.trim()
         $(document).trigger("change:#{model}", [model])
-        UpdateableViews.updateViewsForModels(model)
+        UpdateableViews.updateViewsForModel(model)
 
   notifyUserOfError: ->
     alert "Sorry, something when wrong. Please try again, or reload the page"

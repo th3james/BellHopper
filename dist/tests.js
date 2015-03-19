@@ -264,7 +264,7 @@ describe('Remote Confirm', function() {
       server.restore();
       return window.confirm = actualConfirm;
     });
-    return it("calls UpdatableViews.updateViewsForModels() with the mutated model", function() {
+    return it("calls UpdatableViews.updateViewsForModel() with the mutated model", function() {
       var element, mutatedModels, remoteMethod, remoteUrl, server, updateViewsStub;
       window.confirm = function() {
         return true;
@@ -279,7 +279,7 @@ describe('Remote Confirm', function() {
           "Content-Type": "text/html"
         }, "OK"
       ]);
-      updateViewsStub = sinon.stub(UpdateableViews, 'updateViewsForModels', function() {});
+      updateViewsStub = sinon.stub(UpdateableViews, 'updateViewsForModel', function() {});
       RemoteConfirm(element);
       server.respond();
       expect(updateViewsStub.calledWith(mutatedModels)).toBeTruthy();
@@ -479,13 +479,13 @@ describe('Remote Modal View', function() {
 });
 
 describe("UpdateableViews", function() {
-  describe(".updateViewsForModels", function() {
+  describe(".updateViewsForModel", function() {
     return it("calls updateView on each DOM element which matches data-model for the given model", function() {
       var matchingView, updateViewEl, updateViewStub;
       matchingView = $("<div id=\"matching-el\" data-model=\"investigation\"></div>")[0];
       $('body').append(matchingView);
       updateViewStub = sinon.stub(UpdateableViews, 'updateView', function() {});
-      UpdateableViews.updateViewsForModels('investigation');
+      UpdateableViews.updateViewsForModel('investigation');
       expect(updateViewStub.callCount).toEqual(1);
       updateViewEl = $(updateViewStub.getCall(0).args[0]);
       expect(updateViewEl.attr('id')).toEqual('matching-el');

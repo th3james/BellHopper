@@ -29,7 +29,7 @@ describe 'Remote Confirm', ->
       server.restore()
       window.confirm = actualConfirm
 
-    it "calls UpdatableViews.updateViewsForModels() with the mutated model", ->
+    it "calls UpdatableViews.updateViewsForModel() with the mutated model", ->
       window.confirm = -> true
       remoteUrl = "/waffles"
       remoteMethod = "DELETE"
@@ -45,7 +45,7 @@ describe 'Remote Confirm', ->
         [201, { "Content-Type": "text/html" }, "OK"])
 
       updateViewsStub = sinon.stub(
-        UpdateableViews, 'updateViewsForModels', ->)
+        UpdateableViews, 'updateViewsForModel', ->)
 
       RemoteConfirm(element)
       server.respond()

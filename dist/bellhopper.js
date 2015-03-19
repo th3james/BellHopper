@@ -43,7 +43,7 @@
         results.push((function(model) {
           model = model.trim();
           $(document).trigger("change:" + model, [model]);
-          return UpdateableViews.updateViewsForModels(model);
+          return UpdateableViews.updateViewsForModel(model);
         })(model));
       }
       return results;
@@ -139,8 +139,8 @@
 
 (function() {
   window.UpdateableViews = {
-    updateViewsForModels: function(models) {
-      return $("[data-model=\"" + models + "\"]").each(function(i, viewEl) {
+    updateViewsForModel: function(model) {
+      return $("[data-model=\"" + model + "\"]").each(function(i, viewEl) {
         return UpdateableViews.updateView(viewEl);
       });
     },
@@ -191,7 +191,7 @@
         url: config['remote-url'],
         method: config['remote-method']
       }).done(function() {
-        return UpdateableViews.updateViewsForModels(config['mutates-models']);
+        return UpdateableViews.updateViewsForModel(config['mutates-models']);
       });
     }
   };
