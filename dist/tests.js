@@ -305,6 +305,9 @@ describe('Remote Confirm', function() {
 
 describe('Remote Helpers', function() {
   return describe('.triggerChange', function() {
+    afterEach(function() {
+      return $(document).off("change:study_designs");
+    });
     it("triggers change:<model_name> on document for the given model name", function() {
       var eventSpy;
       eventSpy = sinon.spy();
@@ -313,6 +316,9 @@ describe('Remote Helpers', function() {
       return expect(eventSpy.callCount).toEqual(1);
     });
     return describe('with a comma seperated string of model names', function() {
+      afterEach(function() {
+        return $(document).off("change:studies");
+      });
       return it("triggers change:<model_name> for each of the models in the list", function() {
         var eventSpy;
         eventSpy = sinon.spy();
