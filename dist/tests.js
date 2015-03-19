@@ -305,12 +305,22 @@ describe('Remote Confirm', function() {
 
 describe('Remote Helpers', function() {
   return describe('.triggerChange', function() {
-    return it("triggers change:<model_name> on document for the given model name", function() {
+    it("triggers change:<model_name> on document for the given model name", function() {
       var eventSpy;
       eventSpy = sinon.spy();
       $(document).on('change:study_designs', eventSpy);
       RemoteHelpers.triggerChange('study_designs');
       return expect(eventSpy.callCount).toEqual(1);
+    });
+    return describe('with a comma seperated string of model names', function() {
+      return it("triggers change:<model_name> for each of the models in the list", function() {
+        var eventSpy;
+        eventSpy = sinon.spy();
+        $(document).on('change:study_designs', eventSpy);
+        $(document).on('change:studies', eventSpy);
+        RemoteHelpers.triggerChange('study_designs, studies');
+        return expect(eventSpy.callCount).toEqual(2);
+      });
     });
   });
 });

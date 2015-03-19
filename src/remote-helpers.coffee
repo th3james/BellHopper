@@ -25,8 +25,10 @@ window.RemoteHelpers =
     )
 
   triggerChange: (models) ->
-    $(document).trigger("change:#{models}", [models])
-    UpdateableViews.updateViewsForModels(models)
+    for model in models.split(",")
+      do (model) ->
+        $(document).trigger("change:#{model.trim()}", [model])
+        UpdateableViews.updateViewsForModels(model)
 
   notifyUserOfError: ->
     alert "Sorry, something when wrong. Please try again, or reload the page"

@@ -35,8 +35,17 @@
       });
     },
     triggerChange: function(models) {
-      $(document).trigger("change:" + models, [models]);
-      return UpdateableViews.updateViewsForModels(models);
+      var fn, i, len, model, ref, results;
+      ref = models.split(",");
+      fn = function(model) {};
+      results = [];
+      for (i = 0, len = ref.length; i < len; i++) {
+        model = ref[i];
+        fn(model);
+        $(document).trigger("change:" + (model.trim()), [model]);
+        results.push(UpdateableViews.updateViewsForModels(model));
+      }
+      return results;
     },
     notifyUserOfError: function() {
       return alert("Sorry, something when wrong. Please try again, or reload the page");

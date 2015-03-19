@@ -7,3 +7,15 @@ describe 'Remote Helpers', ->
       RemoteHelpers.triggerChange('study_designs')
 
       expect(eventSpy.callCount).toEqual(1)
+
+    describe 'with a comma seperated string of model names', ->
+      it "triggers change:<model_name> for each of the models in the list", ->
+        eventSpy = sinon.spy()
+        $(document).on('change:study_designs', eventSpy)
+        $(document).on('change:studies', eventSpy)
+
+        RemoteHelpers.triggerChange('study_designs, studies')
+
+        expect(eventSpy.callCount).toEqual(2)
+
+        
