@@ -264,8 +264,8 @@ describe('Remote Confirm', function() {
       server.restore();
       return window.confirm = actualConfirm;
     });
-    return it("calls UpdatableViews.updateViewsForModel() with the mutated model", function() {
-      var element, mutatedModels, remoteMethod, remoteUrl, server, updateViewsStub;
+    return it("triggers an update for the mutated model", function() {
+      var element, mutatedModels, remoteMethod, remoteUrl, server, triggerChangeStub;
       window.confirm = function() {
         return true;
       };
@@ -279,12 +279,12 @@ describe('Remote Confirm', function() {
           "Content-Type": "text/html"
         }, "OK"
       ]);
-      updateViewsStub = sinon.stub(UpdateableViews, 'updateViewsForModel', function() {});
+      triggerChangeStub = sinon.stub(RemoteHelpers, 'triggerChange', function() {});
       RemoteConfirm(element);
       server.respond();
-      expect(updateViewsStub.calledWith(mutatedModels)).toBeTruthy();
+      expect(triggerChangeStub.calledWith(mutatedModels)).toBeTruthy();
       server.restore();
-      updateViewsStub.restore();
+      triggerChangeStub.restore();
       return window.confirm = actualConfirm;
     });
   });

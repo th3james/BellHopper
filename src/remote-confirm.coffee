@@ -8,7 +8,7 @@ window.RemoteConfirm = (srcEl)->
       url: config['remote-url']
       method: config['remote-method']
     ).done(->
-      UpdateableViews.updateViewsForModel(config['mutates-models'])
+      RemoteHelpers.triggerChange(config['mutates-models'])
     )
 
 RemoteHelpers.onDataAction('remote_confirm', 'click', (event) ->

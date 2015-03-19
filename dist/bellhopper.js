@@ -191,7 +191,7 @@
         url: config['remote-url'],
         method: config['remote-method']
       }).done(function() {
-        return UpdateableViews.updateViewsForModel(config['mutates-models']);
+        return RemoteHelpers.triggerChange(config['mutates-models']);
       });
     }
   };
