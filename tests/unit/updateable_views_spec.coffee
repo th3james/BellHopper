@@ -1,5 +1,5 @@
 describe "UpdateableViews", ->
-  describe ".updateViewsForModels", ->
+  describe ".updateViewsForModel", ->
     it "calls updateView on each DOM element which matches data-model for the
     given model", ->
       matchingView = $("""
@@ -9,7 +9,7 @@ describe "UpdateableViews", ->
       
       updateViewStub = sinon.stub(UpdateableViews, 'updateView', ->)
 
-      UpdateableViews.updateViewsForModels('investigation')
+      UpdateableViews.updateViewsForModel('investigation')
 
       expect(updateViewStub.callCount).toEqual(1)
       updateViewEl = $(updateViewStub.getCall(0).args[0])

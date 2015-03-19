@@ -1,7 +1,7 @@
 (function() {
   window.UpdateableViews = {
-    updateViewsForModels: function(models) {
-      return $("[data-model=\"" + models + "\"]").each(function(i, viewEl) {
+    updateViewsForModel: function(model) {
+      return $("[data-model=\"" + model + "\"]").each(function(i, viewEl) {
         return UpdateableViews.updateView(viewEl);
       });
     },

@@ -35,8 +35,18 @@
       });
     },
     triggerChange: function(models) {
-      $(document).trigger("change:" + models, [models]);
-      return UpdateableViews.updateViewsForModels(models);
+      var i, len, model, ref, results;
+      ref = models.split(",");
+      results = [];
+      for (i = 0, len = ref.length; i < len; i++) {
+        model = ref[i];
+        results.push((function(model) {
+          model = model.trim();
+          $(document).trigger("change:" + model, [model]);
+          return UpdateableViews.updateViewsForModel(model);
+        })(model));
+      }
+      return results;
     },
     notifyUserOfError: function() {
       return alert("Sorry, something when wrong. Please try again, or reload the page");
@@ -129,8 +139,8 @@
 
 (function() {
   window.UpdateableViews = {
-    updateViewsForModels: function(models) {
-      return $("[data-model=\"" + models + "\"]").each(function(i, viewEl) {
+    updateViewsForModel: function(model) {
+      return $("[data-model=\"" + model + "\"]").each(function(i, viewEl) {
         return UpdateableViews.updateView(viewEl);
       });
     },
@@ -181,7 +191,7 @@
         url: config['remote-url'],
         method: config['remote-method']
       }).done(function() {
-        return UpdateableViews.updateViewsForModels(config['mutates-models']);
+        return UpdateableViews.updateViewsForModel(config['mutates-models']);
       });
     }
   };
