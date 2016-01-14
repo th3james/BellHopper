@@ -14,6 +14,7 @@
   };
 
   RemoteHelpers.onDataAction('remote_confirm', 'click', function(event) {
+    event.preventDefault();
     return RemoteConfirm(event.currentTarget);
   });
 

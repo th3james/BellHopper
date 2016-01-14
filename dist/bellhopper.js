@@ -17,17 +17,17 @@
       return attributes;
     },
     requireAttributes: function(attributes, required) {
-      var i, len, requiredAttribute, results;
-      results = [];
-      for (i = 0, len = required.length; i < len; i++) {
-        requiredAttribute = required[i];
+      var requiredAttribute, _i, _len, _results;
+      _results = [];
+      for (_i = 0, _len = required.length; _i < _len; _i++) {
+        requiredAttribute = required[_i];
         if (!attributes[requiredAttribute]) {
           throw new Error("data-action=\"" + attributes['action'] + "\" elements must specify a data-" + requiredAttribute + " attribute");
         } else {
-          results.push(void 0);
+          _results.push(void 0);
         }
       }
-      return results;
+      return _results;
     },
     onDataAction: function(dataAction, eventName, handler) {
       return $(document).on("ready page:load", function() {
@@ -35,18 +35,18 @@
       });
     },
     triggerChange: function(models) {
-      var i, len, model, ref, results;
-      ref = models.split(",");
-      results = [];
-      for (i = 0, len = ref.length; i < len; i++) {
-        model = ref[i];
-        results.push((function(model) {
+      var model, _i, _len, _ref, _results;
+      _ref = models.split(",");
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        model = _ref[_i];
+        _results.push((function(model) {
           model = model.trim();
           $(document).trigger("change:" + model, [model]);
           return UpdateableViews.updateViewsForModel(model);
         })(model));
       }
-      return results;
+      return _results;
     },
     notifyUserOfError: function() {
       return alert("Sorry, something when wrong. Please try again, or reload the page");
@@ -56,12 +56,12 @@
 }).call(this);
 
 (function() {
-  var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    hasProp = {}.hasOwnProperty;
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   window.RemoteResponseValidator = (function() {
-    function RemoteResponseValidator(remoteUrl1) {
-      this.remoteUrl = remoteUrl1;
+    function RemoteResponseValidator(remoteUrl) {
+      this.remoteUrl = remoteUrl;
     }
 
     RemoteResponseValidator.validateSuccessfulResponse = function(responseBody, remoteUrl) {
@@ -83,10 +83,10 @@
       var errorMessage;
       if (typeof responseBody !== 'object') {
         errorMessage = "Post to " + this.remoteUrl + " expected to respond with JSON, but got";
-        console.log(errorMessage + ": ");
+        console.log("" + errorMessage + ": ");
         console.log(responseBody);
         RemoteHelpers.notifyUserOfError();
-        throw new RemoteResponseError(errorMessage + " '" + responseBody + "'");
+        throw new RemoteResponseError("" + errorMessage + " '" + responseBody + "'");
       }
     };
 
@@ -94,7 +94,7 @@
       var errorMessage;
       if ((typeof message === 'string') && (message.match(/^Internal Server Error.*/))) {
         errorMessage = "Error '" + status + " - " + message + "' submitting remote form to " + this.remoteUrl;
-        console.log(errorMessage + ":");
+        console.log("" + errorMessage + ":");
         console.log(response);
         RemoteHelpers.notifyUserOfError();
         throw new RemoteResponseError(errorMessage);
@@ -124,8 +124,8 @@
 
   })();
 
-  window.RemoteResponseError = (function(superClass) {
-    extend(RemoteResponseError, superClass);
+  window.RemoteResponseError = (function(_super) {
+    __extends(RemoteResponseError, _super);
 
     function RemoteResponseError() {
       return RemoteResponseError.__super__.constructor.apply(this, arguments);
@@ -176,6 +176,7 @@
   };
 
   RemoteHelpers.onDataAction('remote_action', 'click', function(event) {
+    event.preventDefault();
     return RemoteAction(event.currentTarget);
   });
 
@@ -204,14 +205,14 @@
 
 (function() {
   var modalTemplate,
-    bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   modalTemplate = "<div class=\"modal\" tabindex=\"-1\">\n  <div class=\"modal-dialog\">\n    <div class=\"modal-content\">\n    </div>\n  </div>\n</div>";
 
   window.RemoteModalView = (function() {
     function RemoteModalView(srcEl) {
-      this.close = bind(this.close, this);
-      this.routeResponse = bind(this.routeResponse, this);
+      this.close = __bind(this.close, this);
+      this.routeResponse = __bind(this.routeResponse, this);
       this.config = RemoteHelpers.extractAttributes(srcEl);
       RemoteHelpers.requireAttributes(this.config, ['modal-url']);
       this.$el = $(modalTemplate);
@@ -308,6 +309,7 @@
 
   RemoteHelpers.onDataAction('remote_modal', 'click', function(event) {
     var view;
+    event.preventDefault();
     view = new RemoteModalView(event.currentTarget);
     return view.render();
   });

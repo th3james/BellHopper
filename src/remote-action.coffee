@@ -18,5 +18,6 @@ window.RemoteAction = (srcEl) ->
   )
 
 RemoteHelpers.onDataAction('remote_action', 'click', (event) ->
+  event.preventDefault()
   RemoteAction(event.currentTarget)
 )

@@ -18,6 +18,7 @@
   };
 
   RemoteHelpers.onDataAction('remote_action', 'click', function(event) {
+    event.preventDefault();
     return RemoteAction(event.currentTarget);
   });
 

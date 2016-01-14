@@ -12,6 +12,7 @@ window.RemoteConfirm = (srcEl)->
     )
 
 RemoteHelpers.onDataAction('remote_confirm', 'click', (event) ->
+  event.preventDefault()
   RemoteConfirm(event.currentTarget)
 )
 

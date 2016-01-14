@@ -17,17 +17,17 @@
       return attributes;
     },
     requireAttributes: function(attributes, required) {
-      var i, len, requiredAttribute, results;
-      results = [];
-      for (i = 0, len = required.length; i < len; i++) {
-        requiredAttribute = required[i];
+      var requiredAttribute, _i, _len, _results;
+      _results = [];
+      for (_i = 0, _len = required.length; _i < _len; _i++) {
+        requiredAttribute = required[_i];
         if (!attributes[requiredAttribute]) {
           throw new Error("data-action=\"" + attributes['action'] + "\" elements must specify a data-" + requiredAttribute + " attribute");
         } else {
-          results.push(void 0);
+          _results.push(void 0);
         }
       }
-      return results;
+      return _results;
     },
     onDataAction: function(dataAction, eventName, handler) {
       return $(document).on("ready page:load", function() {
@@ -35,18 +35,18 @@
       });
     },
     triggerChange: function(models) {
-      var i, len, model, ref, results;
-      ref = models.split(",");
-      results = [];
-      for (i = 0, len = ref.length; i < len; i++) {
-        model = ref[i];
-        results.push((function(model) {
+      var model, _i, _len, _ref, _results;
+      _ref = models.split(",");
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        model = _ref[_i];
+        _results.push((function(model) {
           model = model.trim();
           $(document).trigger("change:" + model, [model]);
           return UpdateableViews.updateViewsForModel(model);
         })(model));
       }
-      return results;
+      return _results;
     },
     notifyUserOfError: function() {
       return alert("Sorry, something when wrong. Please try again, or reload the page");

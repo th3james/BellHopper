@@ -87,6 +87,7 @@ class window.RemoteModalView
     @$el.remove()
 
 RemoteHelpers.onDataAction('remote_modal', 'click', (event) ->
+  event.preventDefault()
   view = new RemoteModalView(event.currentTarget)
   view.render()
 )
