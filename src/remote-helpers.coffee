@@ -20,7 +20,7 @@ window.RemoteHelpers =
           )
 
   onDataAction: (dataAction, eventName, handler) ->
-    $(document).on("ready page:load", ->
+    $(document).on("ready page:load turbolinks:load", ->
       $('body').delegate("[data-action=\"#{dataAction}\"]", eventName, handler)
     )
 

@@ -30,7 +30,7 @@
       return _results;
     },
     onDataAction: function(dataAction, eventName, handler) {
-      return $(document).on("ready page:load", function() {
+      return $(document).on("ready page:load turbolinks:load", function() {
         return $('body').delegate("[data-action=\"" + dataAction + "\"]", eventName, handler);
       });
     },
