@@ -22,6 +22,6 @@
     "gulp-concat": "^2.4.1",
     "gulp-order": "^1.1.1",
     "gulp-util": "^3.0.1",
-    "lodash": "^2.4.1"
+    "lodash": "^4.17.13"
   }
 }
